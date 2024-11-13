@@ -46,4 +46,14 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    // added
+    implementation(libs.volley)
+    implementation(libs.activity)
+    implementation(libs.javamail)
+    implementation(libs.activation)
+    implementation(libs.bcrypt)
+    implementation(libs.volley)
+    implementation(libs.room.common)
+    implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
 }
