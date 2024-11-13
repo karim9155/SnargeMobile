@@ -1,8 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
+    useLibrary("org.apache.http.legacy")
     namespace = "com.example.snargemobile"
     compileSdk = 34
 
@@ -12,8 +14,18 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        packaging {
+            resources {
+                // Exclude duplicate META-INF files that cause the build to fail
+                excludes += "META-INF/DEPENDENCIES"
+                excludes += "META-INF/LICENSE"
+                excludes += "META-INF/LICENSE.txt"
+                excludes += "META-INF/license.txt"
+                excludes += "META-INF/NOTICE"
+                excludes += "META-INF/NOTICE.txt"
+                excludes += "META-INF/notice.txt"
+            }  }
     }
 
     buildTypes {
@@ -35,6 +47,10 @@ android {
 }
 
 dependencies {
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation(libs.sdk.twilio)  {
+    exclude(group = "org.apache.httpcomponents", module = "httpclient")
+}
 
     implementation(libs.appcompat)
     implementation(libs.material)

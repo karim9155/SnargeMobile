@@ -11,4 +11,11 @@
     <string name="menu_events">Events</string>
     <string name="menu_forum">Forum</string>
     <string name="menu_artists">Artists</string>
+    <string name="event_description">Event Description</string>
+    <string name="event_date">Event Date</string>
+    <string name="event_price">Event Price</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+    <string name="mark_as_paid">Mark as Paid</string>
+    <string name="event_name">Event Name</string>
 </resources>
