@@ -11,4 +11,6 @@
     <string name="menu_events">Events</string>
     <string name="menu_forum">Forum</string>
     <string name="menu_artists">Artists</string>
+    <string name="update_button_description">Update Artist</string>
+    <string name="delete_button_description">Delete Artist</string>
 </resources>

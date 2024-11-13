@@ -56,30 +56,27 @@ public class ArtistsFragment extends Fragment implements ArtistsAdapter.OnArtist
         // Set up dialog components
         EditText editName = dialogView.findViewById(R.id.edit_artist_name);
         EditText editGenre = dialogView.findViewById(R.id.edit_artist_genre);
-        EditText editTrack = dialogView.findViewById(R.id.edit_artist_track);
+        EditText editTrack = dialogView.findViewById(R.id.edit_artist_track);  // Use this for track URL
         Button buttonAdd = dialogView.findViewById(R.id.button_add_artist);
         Button buttonCancel = dialogView.findViewById(R.id.button_cancel);
 
-        // Build and show the dialog
+        buttonAdd.setText("Add Artist");
+
         AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setView(dialogView)
                 .setCancelable(false)
                 .create();
 
         buttonAdd.setOnClickListener(v -> {
-            // Get user input
             String name = editName.getText().toString().trim();
             String genre = editGenre.getText().toString().trim();
-            String track = editTrack.getText().toString().trim();
+            String trackUrl = editTrack.getText().toString().trim();
 
-            if (name.isEmpty() || genre.isEmpty() || track.isEmpty()) {
+            if (name.isEmpty() || genre.isEmpty() || trackUrl.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
             } else {
-                // Create a new Artist object
-                Artist newArtist = new Artist(0, name, genre, track);
-                // Add the artist to the database via ViewModel
+                Artist newArtist = new Artist(0, name, genre, trackUrl);
                 artistsViewModel.addArtist(newArtist);
-                // Dismiss the dialog
                 dialog.dismiss();
                 Toast.makeText(getContext(), "Artist Added", Toast.LENGTH_SHORT).show();
             }

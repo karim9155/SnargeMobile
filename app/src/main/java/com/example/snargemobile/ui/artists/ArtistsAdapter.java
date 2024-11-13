@@ -3,8 +3,12 @@ package com.example.snargemobile.ui.artists;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.snargemobile.R;
@@ -38,7 +42,23 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistVi
         Artist artist = artists.get(position);
         holder.nameTextView.setText(artist.getName());
         holder.genreTextView.setText(artist.getGenre());
-        holder.trackTextView.setText(artist.getTrack());
+
+        // Configure WebView to display Spotify track
+        String trackUrl = artist.getTrack();
+        if (trackUrl != null && !trackUrl.isEmpty()) {
+            String trackId = extractTrackId(trackUrl);
+            if (trackId != null) {
+                String embedUrl = "https://open.spotify.com/embed/track/" + trackId;
+                holder.trackWebView.loadData(
+                        "<iframe style=\"border-radius:12px\" src=\"" + embedUrl +
+                                "\" width=\"100%\" height=\"80\" frameBorder=\"0\" " +
+                                "allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\" " +
+                                "loading=\"lazy\"></iframe>",
+                        "text/html", "utf-8");
+            }
+        } else {
+            holder.trackWebView.loadData("<p>No track available</p>", "text/html", "utf-8");
+        }
 
         // Handle Update button click
         holder.updateButton.setOnClickListener(v -> {
@@ -56,17 +76,34 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistVi
         return artists.size();
     }
 
+    private String extractTrackId(String url) {
+        // Extract the track ID from the Spotify URL
+        // Spotify URL format: https://open.spotify.com/track/{trackId}?{parameters}
+        String[] parts = url.split("/track/");
+        if (parts.length > 1) {
+            String trackPart = parts[1];
+            return trackPart.contains("?") ? trackPart.split("\\?")[0] : trackPart;
+        }
+        return null;
+    }
+
     public static class ArtistViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView, genreTextView, trackTextView;
-        Button updateButton, deleteButton;
+        TextView nameTextView, genreTextView;
+        WebView trackWebView;
+        ImageButton updateButton;  // Declare as ImageButton
+        ImageButton deleteButton;
 
         public ArtistViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.text_artist_name);
             genreTextView = itemView.findViewById(R.id.text_artist_genre);
-            trackTextView = itemView.findViewById(R.id.text_artist_track);
+            trackWebView = itemView.findViewById(R.id.webview_artist_track);
             updateButton = itemView.findViewById(R.id.button_update_artist);
             deleteButton = itemView.findViewById(R.id.button_delete_artist);
+
+            // Configure WebView settings
+            WebSettings webSettings = trackWebView.getSettings();
+            webSettings.setJavaScriptEnabled(true);  // Enable JavaScript for iframe support
         }
     }
 
