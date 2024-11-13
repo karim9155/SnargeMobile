@@ -23,7 +23,7 @@ import org.json.JSONObject;
 
 public class EventsViewModel extends AndroidViewModel {
 
-    private static final String ACCOUNT_SID = "AC9e957c700b9133d465d30d24f77b0423"; // Replace with your Twilio Account SID
+    private static final String ACCOUNT_SID = "private"; // Replace with your Twilio Account SID
     private static final String AUTH_TOKEN = "privte";   // Replace with your Twilio Auth Token
     private static final String TWILIO_PHONE_NUMBER = "+1 443 251 3881"; // Replace with your Twilio Phone Number
 
