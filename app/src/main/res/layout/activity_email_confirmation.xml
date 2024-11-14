@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/activity_email_confirmation.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <!-- Confirmation Message -->
+    <TextView
+        android:id="@+id/confirmationMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="A confirmation code has been sent to your email. Please enter it below to confirm."
+        android:textSize="18sp"
+        android:textAlignment="center"
+        android:paddingBottom="24dp"
+        android:gravity="center" />
+
+    <!-- Confirmation Code Input -->
+    <EditText
+        android:id="@+id/confirmationCodeEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Confirmation Code"
+        android:inputType="text"
+        android:minHeight="48dp"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:textSize="16sp" />
+
+    <!-- Confirm Button -->
+    <Button
+        android:id="@+id/confirmButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        android:layout_marginTop="24dp"
+        android:padding="12dp"
+        android:textSize="16sp" />
+
+</LinearLayout>
+
