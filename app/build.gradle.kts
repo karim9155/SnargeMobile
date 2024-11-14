@@ -47,6 +47,7 @@ android {
 }
 
 dependencies {
+    implementation ("com.stripe:stripe-android:20.15.3")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation(libs.sdk.twilio)  {
     exclude(group = "org.apache.httpcomponents", module = "httpclient")

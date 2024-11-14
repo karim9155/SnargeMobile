@@ -16,6 +16,6 @@
     <string name="event_price">Event Price</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
-    <string name="mark_as_paid">Mark as Paid</string>
+    <string name="book_event">Book Event</string>
     <string name="event_name">Event Name</string>
 </resources>

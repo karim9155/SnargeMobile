@@ -18,12 +18,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.snargemobile.R;
 import com.example.snargemobile.databinding.FragmentEventsBinding;
 import com.example.snargemobile.models.Event;
+import com.stripe.android.paymentsheet.PaymentSheet;
+import com.stripe.android.paymentsheet.PaymentSheetResult;
 
 public class EventsFragment extends Fragment {
 
     private FragmentEventsBinding binding;
     private EventsViewModel eventsViewModel;
     private EventsAdapter adapter;
+    private PaymentSheet paymentSheet;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -32,7 +36,10 @@ public class EventsFragment extends Fragment {
 
         binding = FragmentEventsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        // Initialize PaymentSheet here with the fragment's lifecycle
+        paymentSheet = new PaymentSheet(this, paymentSheetResult -> {
+            handlePaymentResult(paymentSheetResult);
+        });
         // Setup RecyclerView
         RecyclerView recyclerView = binding.recyclerViewEvents;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -48,6 +55,15 @@ public class EventsFragment extends Fragment {
 
         return root;
     }
+    private void handlePaymentResult(PaymentSheetResult paymentSheetResult) {
+        if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
+            Toast.makeText(getContext(), "Payment successful. Confirmation SMS sent!", Toast.LENGTH_SHORT).show();
+            // Additional logic to mark the event as paid, etc., if needed
+        } else {
+            Toast.makeText(getContext(), "Payment failed. Try again.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     private void showAddEventDialog() {
         final Dialog dialog = new Dialog(requireContext());
@@ -94,7 +110,7 @@ public class EventsFragment extends Fragment {
         EditText priceInput = dialog.findViewById(R.id.editTextEventPrice);
         Button updateButton = dialog.findViewById(R.id.buttonUpdateEvent);
         Button deleteButton = dialog.findViewById(R.id.buttonDeleteEvent);
-        Button payButton = dialog.findViewById(R.id.buttonPayEvent); // New "Mark as Paid" button
+        Button payButton = dialog.findViewById(R.id.buttonPayEvent); // "Mark as Paid" button
 
         // Set existing event data
         nameInput.setText(event.getName());
@@ -125,15 +141,28 @@ public class EventsFragment extends Fragment {
             Toast.makeText(getContext(), "Event deleted", Toast.LENGTH_SHORT).show();
         });
 
+        // Set the click listener for the payment button
         payButton.setOnClickListener(v -> {
             if (!event.isPaymentStatus()) {
-                eventsViewModel.markEventAsPaid(event); // Mark as paid and send SMS
-                Toast.makeText(getContext(), "Payment marked and confirmation sent", Toast.LENGTH_SHORT).show();
+                eventsViewModel.initiatePayment(event);  // Trigger the ViewModel to set the client secret
+
+                // Observe client secret from ViewModel and present PaymentSheet if available
+                eventsViewModel.getPaymentIntentClientSecret().observe(getViewLifecycleOwner(), clientSecret -> {
+                    if (clientSecret != null) {
+                        // Present the Payment Sheet with the client secret
+                        PaymentSheet.Configuration configuration = new PaymentSheet.Configuration("Your Business Name");
+                        paymentSheet.presentWithPaymentIntent(clientSecret, configuration);
+                    } else {
+                        Toast.makeText(getContext(), "Failed to retrieve client secret", Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
                 Toast.makeText(getContext(), "Event already marked as paid", Toast.LENGTH_SHORT).show();
             }
             dialog.dismiss();
         });
+
+
 
         dialog.show();
     }
@@ -157,9 +186,11 @@ public class EventsFragment extends Fragment {
         }
     }
 
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
 }
